@@ -38,6 +38,8 @@ class App:
         language = ElementFinder.find(self.__driver, (By.ID, "langSelect-EN"), 10)
         language.click()
 
+        time.sleep(2)
+
         player = Player(self.__driver)
         player.set_up()
 

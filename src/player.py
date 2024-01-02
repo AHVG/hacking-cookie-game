@@ -1,6 +1,7 @@
 
 from selenium.webdriver.common.by import By
 
+from product import Product
 from element_finder import ElementFinder
 
 
@@ -19,27 +20,14 @@ class Player:
 
         self.__products_prefix = "product"
         self.__products_price_prefix = "productPrice"
-        self.__products = [None for _ in range(0, 20)]
+        self.__products = []
 
 
     def set_up(self):
         self.__big_cookie = ElementFinder.find(self.__driver, (By.ID, "bigCookie"), 10)
 
         for i in range(0, 20):
-            self.update_product({"price_id": self.__products_price_prefix + str(i),
-                                "product_id": self.__products_prefix + str(i),
-                                "number": i})
-
-
-    def update_product(self, product_infos):
-        product_price = ElementFinder.find(self.__driver, (By.ID, product_infos["price_id"])).text.replace(",", "")
-        
-        if product_price:
-            product_price = int(product_price)
-        
-        product = ElementFinder.find(self.__driver, (By.ID, product_infos["product_id"]))
-
-        self.__products[product_infos["number"]] = {"price": product_price, "product": product}
+            self.__products.append(Product(self.__driver, self.__products_prefix + str(i), self.__products_price_prefix + str(i)))
 
 
     def update(self):
@@ -47,10 +35,10 @@ class Player:
 
         for i in range(0, 20):
 
-            if self.__products[i]["price"] and self.__products[i]["price"] < int(ElementFinder.find(self.__driver, (By.ID, "cookies")).text.split()[0]):
-                self.__products[i]["product"].click()
-                self.update_product({"price_id": self.__products_price_prefix + str(i),
-                                     "product_id": self.__products_prefix + str(i),
-                                     "number": i})
-                # TODO: Adicionar logica para atualizar os proximos quando se compra o ultimo produto
+            if self.__products[i].get_price() and self.__products[i].get_price() < int(ElementFinder.find(self.__driver, (By.ID, "cookies")).text.split()[0]):
+                self.__products[i].buy()
+                
+                if i != 19 and not self.__products[i + 1].get_price():
+                    self.__products[i + 1].update_price()
+                
                 break
