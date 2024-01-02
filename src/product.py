@@ -1,7 +1,7 @@
 
 from selenium.webdriver.common.by import By
 
-from element_finder import ElementFinder
+from utils import find_element
 
 
 class Product:
@@ -12,7 +12,7 @@ class Product:
         self.__element_id = element_id
         self.__price_id = price_id
 
-        self.__element = ElementFinder.find(self.__driver, (By.ID, element_id), 10)
+        self.__element = find_element(self.__driver, (By.ID, element_id), 10)
         self.__price = None
         self.update_price()
 
@@ -34,7 +34,7 @@ class Product:
     
 
     def update_price(self):
-        self.__price = ElementFinder.find(self.__driver, (By.ID, self.__price_id)).text.replace(",", "")
+        self.__price = find_element(self.__driver, (By.ID, self.__price_id)).text.replace(",", "")
 
         if self.__price:
             self.__price = int(self.__price)

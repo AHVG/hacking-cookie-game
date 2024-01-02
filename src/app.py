@@ -1,3 +1,4 @@
+
 import time
 
 from selenium import webdriver
@@ -6,7 +7,7 @@ from selenium.webdriver.common.by import By
 
 from webdriver_manager.chrome import ChromeDriverManager
 
-from element_finder import ElementFinder
+from utils import find_element
 from player import Player
 
 
@@ -35,7 +36,7 @@ class App:
     def run(self):
         self.__driver.get(self.__cookie_game_url)
 
-        language = ElementFinder.find(self.__driver, (By.ID, "langSelect-EN"), 10)
+        language = find_element(self.__driver, (By.ID, "langSelect-EN"), 10)
         language.click()
 
         time.sleep(2)
