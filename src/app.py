@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
 from element_finder import ElementFinder
+from player import Player
 
 
 class App:
@@ -14,14 +15,14 @@ class App:
         self.__service = Service(ChromeDriverManager().install())
         self.__options = webdriver.ChromeOptions()
         self.__options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.__browser = None
+        self.__driver = None
         self.__running = True
         self.__cookie_game_url = "https://orteil.dashnet.org/cookieclicker/"
 
         try:
-            self.__browser = webdriver.Chrome(service = self.__service, options=self.__options)
+            self.__driver = webdriver.Chrome(service = self.__service, options=self.__options)
         except:
-            self.__browser = webdriver.Firefox()
+            self.__driver = webdriver.Firefox()
 
     
     def is_running(self):
@@ -29,13 +30,15 @@ class App:
 
 
     def run(self) -> None:
-        self.__browser.get(self.__cookie_game_url)
+        self.__driver.get(self.__cookie_game_url)
 
-        language = ElementFinder.find(self.__browser, (By.ID, "langSelect-EN"))
+        language = ElementFinder.find(self.__driver, (By.ID, "langSelect-EN"))
         language.click()
 
-        while self.is_running():
-            pass
+        player = Player(self.__driver)
 
-        self.__browser.close()
-        self.__browser.quit()
+        while self.is_running():
+            player.update()
+
+        self.__driver.close()
+        self.__driver.quit()

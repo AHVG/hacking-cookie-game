@@ -7,8 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 class ElementFinder:
 
     @staticmethod
-    def find(driver, infos):
-        WebDriverWait(driver, 5).until(
+    def find(driver, infos, timeout=5):
+        WebDriverWait(driver, timeout).until(
             EC.presence_of_element_located(infos)
         )
 
