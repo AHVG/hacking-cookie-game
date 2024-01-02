@@ -12,7 +12,9 @@ from player import Player
 
 class App:
 
-    def __init__(self) -> None:
+    # Será que se eu usar processo não vai otimizar o programa?
+
+    def __init__(self):
         self.__service = Service(ChromeDriverManager().install())
         self.__options = webdriver.ChromeOptions()
         self.__options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -30,13 +32,14 @@ class App:
         return self.__running
 
 
-    def run(self) -> None:
+    def run(self):
         self.__driver.get(self.__cookie_game_url)
 
         language = ElementFinder.find(self.__driver, (By.ID, "langSelect-EN"), 10)
         language.click()
 
         player = Player(self.__driver)
+        player.set_up()
 
         while self.is_running():
             player.update()
