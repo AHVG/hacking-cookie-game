@@ -32,7 +32,7 @@ class App:
     def run(self) -> None:
         self.__driver.get(self.__cookie_game_url)
 
-        language = ElementFinder.find(self.__driver, (By.ID, "langSelect-EN"))
+        language = ElementFinder.find(self.__driver, (By.ID, "langSelect-EN"), 10)
         language.click()
 
         player = Player(self.__driver)
