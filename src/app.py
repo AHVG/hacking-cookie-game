@@ -17,16 +17,13 @@ class App:
 
     def __init__(self):
         self.__service = Service(ChromeDriverManager().install())
+    
         self.__options = webdriver.ChromeOptions()
         self.__options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.__driver = None
-        self.__running = True
-        self.__cookie_game_url = "https://orteil.dashnet.org/cookieclicker/"
+    
+        self.__driver = webdriver.Chrome(service = self.__service, options=self.__options)
 
-        try:
-            self.__driver = webdriver.Chrome(service = self.__service, options=self.__options)
-        except:
-            self.__driver = webdriver.Firefox()
+        self.__cookie_game_url = "https://orteil.dashnet.org/cookieclicker/"
 
     
     def is_running(self):
@@ -39,13 +36,15 @@ class App:
         language = find_element(self.__driver, (By.ID, "langSelect-EN"), 10)
         language.click()
 
-        time.sleep(2)
+        time.sleep(1)
 
         player = Player(self.__driver)
         player.set_up()
 
-        while self.is_running():
-            player.update()
+        while True:
+            try:
+                player.update()
+            except:
+                break
 
-        self.__driver.close()
         self.__driver.quit()

@@ -17,7 +17,7 @@ class Player:
         
         self.__big_cookie = None
         self.__cookies = 0
-        self.__seconds = 5
+        self.__seconds = 3
         self.__last_update = time()
 
         self.__products_prefix = "product"
