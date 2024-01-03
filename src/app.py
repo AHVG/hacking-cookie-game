@@ -13,8 +13,6 @@ from player import Player
 
 class App:
 
-    # Será que se eu usar processo não vai otimizar o programa?
-
     def __init__(self):
         self.__service = Service(ChromeDriverManager().install())
     
@@ -33,10 +31,12 @@ class App:
     def run(self):
         self.__driver.get(self.__cookie_game_url)
 
+        time.sleep(5)
+
         language = find_element(self.__driver, (By.ID, "langSelect-EN"), 10)
         language.click()
 
-        time.sleep(1)
+        time.sleep(5)
 
         player = Player(self.__driver)
         player.set_up()

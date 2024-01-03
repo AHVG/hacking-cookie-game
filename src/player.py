@@ -4,13 +4,10 @@ from time import time
 from selenium.webdriver.common.by import By
 
 from product import Product
-from utils import find_element
+from utils import find_element, convert_literal_to_int
 
 
 class Player:
-
-    # TODO: arrumar para prefixo dos valores do cookies, por exemplo, million e etc
-    # TODO: comprar os upgrades
 
     def __init__(self, driver):
         self.__driver = driver
@@ -36,7 +33,7 @@ class Player:
         current_time = time()
 
         if current_time - self.__last_update > self.__seconds:
-            self.__cookies = int(find_element(self.__driver, (By.ID, "cookies")).text.split()[0].replace(",", ""))
+            self.__cookies = convert_literal_to_int(" ".join(find_element(self.__driver, (By.ID, "cookies")).text.split()[:2]))
             self.__last_update = current_time
             return True
         
@@ -55,9 +52,7 @@ class Player:
         except:
             pass
 
-        # Ordenar pelo mais caro
-        products = sorted(self.__products, key=lambda x: x.get_price(), reverse=True)
-        for product in products:
+        for product in sorted(self.__products, key=lambda x: x.get_price(), reverse=True):
 
             if product.get_price() and product.get_price() < self.__cookies:
                 

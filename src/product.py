@@ -1,7 +1,7 @@
 
 from selenium.webdriver.common.by import By
 
-from utils import find_element
+from utils import find_element, convert_literal_to_int
 
 
 class Product:
@@ -40,12 +40,7 @@ class Product:
 
 
     def update_price(self):
-        self.__price = find_element(self.__driver, (By.ID, self.__price_id)).text.replace(",", "")
-
-        if self.__price:
-            self.__price = int(self.__price)
-        else:
-            self.__price = 0
+        self.__price = convert_literal_to_int(find_element(self.__driver, (By.ID, self.__price_id)).text.replace(",", ""))
 
     
     def buy(self):
