@@ -19,22 +19,23 @@ def load_driver():
     try:
         service = GoogleService(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service)
+        return driver, service
     except Exception as e:
         traceback.print_exc()
         print(e)
         print("Possivelmente você não tem o chrome. Se for o caso, baixe-o e tente novamente.")
     
-    if not driver:
-        try:
-            service = FirefoxService(GeckoDriverManager().install())
-            driver = webdriver.Firefox(service=service)
-        except Exception as e:
-            traceback.print_exc()
-            print(e)
-            print("Possivelmente você não tem o Firefox. Se for o caso, baixe-o e tente novamente.")
-            return None, None
+    try:
+        service = FirefoxService(GeckoDriverManager().install())
+        driver = webdriver.Firefox(service=service)
+        return driver, service
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+        print("Possivelmente você não tem o Firefox. Se for o caso, baixe-o e tente novamente.")
+    
+    return None, None
 
-    return driver, service
 
 
 def wait_element(driver, infos, timeout=5):
