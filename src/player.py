@@ -29,25 +29,43 @@ class Player:
         self.__big_cookie = find_element(self.__driver, (By.ID, "bigCookie"), 10)
 
         for i in range(0, 20):
-            self.__products.append(Product(self.__driver, self.__products_prefix + str(i), self.__products_price_prefix + str(i)))
+            self.__products.append(Product(self.__driver, self.__products_prefix + str(i), self.__products_price_prefix + str(i), i))
+
+
+    def is_time_buy(self):
+        current_time = time()
+
+        if current_time - self.__last_update > self.__seconds:
+            self.__cookies = int(find_element(self.__driver, (By.ID, "cookies")).text.split()[0].replace(",", ""))
+            self.__last_update = current_time
+            return True
+        
+        return False
 
 
     def update(self):
         self.__big_cookie.click()
 
-        current_time = time()
-
-        if current_time - self.__last_update > self.__seconds:
-            self.__cookies = int(find_element(self.__driver, (By.ID, "cookies")).text.split()[0])
-            self.__last_update = current_time
+        if not self.is_time_buy():
+            return
         
-        for i in range(0, 20):
+        try:
+            upgrade = find_element(self.__driver, (By.CSS_SELECTOR, "#upgrades .enabled"), 0.05)
+            upgrade.click()
+        except:
+            pass
 
-            if self.__products[i].get_price() and self.__products[i].get_price() < self.__cookies:
-                self.__products[i].buy()
-                self.__cookies -= self.__products[i].get_price()
+        # Ordenar pelo mais caro
+        products = sorted(self.__products, key=lambda x: x.get_price(), reverse=True)
+        for product in products:
+
+            if product.get_price() and product.get_price() < self.__cookies:
                 
-                if i != 19 and not self.__products[i + 1].get_price():
-                    self.__products[i + 1].update_price()
+                while product.get_price() < self.__cookies:
+                    product.buy()
+                    self.__cookies -= product.get_price()
+                
+                if product.get_number() != 19 and not self.__products[product.get_number() + 1].get_price():
+                    self.__products[product.get_number() + 1].update_price()
                 
                 break

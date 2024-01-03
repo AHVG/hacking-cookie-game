@@ -44,7 +44,8 @@ class App:
         while True:
             try:
                 player.update()
-            except:
+            except Exception as e:
+                print(e)
                 break
 
         self.__driver.quit()

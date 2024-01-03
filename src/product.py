@@ -6,7 +6,7 @@ from utils import find_element
 
 class Product:
 
-    def __init__(self, driver, element_id, price_id):
+    def __init__(self, driver, element_id, price_id, number):
         self.__driver = driver
 
         self.__element_id = element_id
@@ -15,6 +15,8 @@ class Product:
         self.__element = find_element(self.__driver, (By.ID, element_id), 10)
         self.__price = None
         self.update_price()
+
+        self.__number = number
 
 
     def get_element(self):
@@ -33,11 +35,17 @@ class Product:
         return self.__price_id
     
 
+    def get_number(self):
+        return self.__number
+
+
     def update_price(self):
         self.__price = find_element(self.__driver, (By.ID, self.__price_id)).text.replace(",", "")
 
         if self.__price:
             self.__price = int(self.__price)
+        else:
+            self.__price = 0
 
     
     def buy(self):
