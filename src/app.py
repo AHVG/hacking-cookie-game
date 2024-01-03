@@ -19,7 +19,10 @@ class App:
         self.__options = webdriver.ChromeOptions()
         self.__options.add_experimental_option('excludeSwitches', ['enable-logging'])
     
-        self.__driver = webdriver.Chrome(service = self.__service, options=self.__options)
+        try:
+            self.__driver = webdriver.Chrome(service = self.__service, options=self.__options)
+        except:
+            self.__driver = webdriver.Firefox(service=self.__service, options=self.__options)
 
         self.__cookie_game_url = "https://orteil.dashnet.org/cookieclicker/"
 
