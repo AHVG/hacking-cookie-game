@@ -1,12 +1,15 @@
 
 import time
+import traceback
 
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as GoogleService
-from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.common.by import By
 
+from selenium.webdriver.chrome.service import Service as GoogleService
 from webdriver_manager.chrome import ChromeDriverManager
+
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from webdriver_manager.firefox import GeckoDriverManager
 
 from utils import find_element
@@ -16,13 +19,15 @@ from player import Player
 class App:
 
     def __init__(self):
-    
+        
         try:
+            self.__service = FirefoxService(GeckoDriverManager().install())
+            self.__driver = webdriver.Firefox(service=self.__service)
+        except Exception as e:
+            traceback.print_exc()
+            print(e)
             self.__service = GoogleService(ChromeDriverManager().install())
             self.__driver = webdriver.Chrome(service=self.__service)
-        except:
-            self.__service = FirefoxService(GeckoDriverManager().install())
-            self.__driver = webdriver.Firefox()
 
         self.__cookie_game_url = "https://orteil.dashnet.org/cookieclicker/"
 
