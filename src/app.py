@@ -2,10 +2,12 @@
 import time
 
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as GoogleService
+from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.common.by import By
 
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 
 from utils import find_element
 from player import Player
@@ -14,15 +16,13 @@ from player import Player
 class App:
 
     def __init__(self):
-        self.__service = Service(ChromeDriverManager().install())
-    
-        self.__options = webdriver.ChromeOptions()
-        self.__options.add_experimental_option('excludeSwitches', ['enable-logging'])
     
         try:
-            self.__driver = webdriver.Chrome(service = self.__service, options=self.__options)
+            self.__service = GoogleService(ChromeDriverManager().install())
+            self.__driver = webdriver.Chrome(service=self.__service)
         except:
-            self.__driver = webdriver.Firefox(service=self.__service, options=self.__options)
+            self.__service = FirefoxService(GeckoDriverManager().install())
+            self.__driver = webdriver.Firefox()
 
         self.__cookie_game_url = "https://orteil.dashnet.org/cookieclicker/"
 
