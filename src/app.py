@@ -1,33 +1,25 @@
 
-import time
 import traceback
+import time
+import sys
 
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-from selenium.webdriver.chrome.service import Service as GoogleService
-from webdriver_manager.chrome import ChromeDriverManager
-
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from webdriver_manager.firefox import GeckoDriverManager
-
-from utils import find_element
+from utils import find_element, load_driver
 from player import Player
 
 
 class App:
 
     def __init__(self):
-        
-        try:
-            self.__service = FirefoxService(GeckoDriverManager().install())
-            self.__driver = webdriver.Firefox(service=self.__service)
-        except Exception as e:
-            traceback.print_exc()
-            print(e)
-            self.__service = GoogleService(ChromeDriverManager().install())
-            self.__driver = webdriver.Chrome(service=self.__service)
+        self.__driver = None
+        self.__service = None
+
+        self.__driver, self.__service = load_driver()
+
+        if not self.__driver:
+            print("Possivelmente ocorreu algum problema nos drivers. Tente baixar ou o Chrome ou o Firefox. Preferencialmente o Chrome.")
+            sys.exit(1)
 
         self.__cookie_game_url = "https://orteil.dashnet.org/cookieclicker/"
 
@@ -38,7 +30,7 @@ class App:
 
     def run(self):
         self.__driver.get(self.__cookie_game_url)
-        # self.__driver.fullscreen_window()
+        self.__driver.fullscreen_window()
 
         time.sleep(5)
 
@@ -54,6 +46,7 @@ class App:
             try:
                 player.update()
             except Exception as e:
+                traceback.print_exc()
                 print(e)
                 break
 

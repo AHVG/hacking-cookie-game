@@ -17,8 +17,6 @@ class Player:
         self.__seconds = 3
         self.__last_update = time()
 
-        self.__products_prefix = "product"
-        self.__products_price_prefix = "productPrice"
         self.__products = []
 
 
@@ -26,7 +24,7 @@ class Player:
         self.__big_cookie = find_element(self.__driver, (By.ID, "bigCookie"), 10)
 
         for i in range(0, 20):
-            self.__products.append(Product(self.__driver, self.__products_prefix + str(i), self.__products_price_prefix + str(i), i))
+            self.__products.append(Product(self.__driver, i))
 
 
     def is_time_buy(self):
@@ -60,7 +58,7 @@ class Player:
                     product.buy()
                     self.__cookies -= product.get_price()
                 
-                if product.get_number() != 19 and not self.__products[product.get_number() + 1].get_price():
-                    self.__products[product.get_number() + 1].update_price()
+                if product.get_id() != 19 and not self.__products[product.get_id() + 1].get_price():
+                    self.__products[product.get_id() + 1].update_price()
                 
                 break

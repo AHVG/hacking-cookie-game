@@ -6,17 +6,20 @@ from utils import find_element, convert_literal_to_int
 
 class Product:
 
-    def __init__(self, driver, element_id, price_id, number):
+    products_prefix = "product"
+    products_price_prefix = "productPrice"
+
+    def __init__(self, driver, id):
         self.__driver = driver
 
-        self.__element_id = element_id
-        self.__price_id = price_id
+        self.__element_id = Product.products_prefix + str(id)
+        self.__price_id = Product.products_price_prefix + str(id)
 
-        self.__element = find_element(self.__driver, (By.ID, element_id), 10)
-        self.__price = None
+        self.__element = find_element(self.__driver, (By.ID, self.__element_id), 10)
+        self.__price = 0
         self.update_price()
 
-        self.__number = number
+        self.__id = id
 
 
     def get_element(self):
@@ -35,8 +38,8 @@ class Product:
         return self.__price_id
     
 
-    def get_number(self):
-        return self.__number
+    def get_id(self):
+        return self.__id
 
 
     def update_price(self):
