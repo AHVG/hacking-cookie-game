@@ -15,7 +15,7 @@ def find_element(driver, infos, timeout=5):
 def convert_literal_to_int(value_text):
     multipliers = {'million': 1_000, 'billion': 1_000_000} # Não sei se tem mais, possivelmente tem
 
-    parts = value_text.split()
+    parts = value_text.replace(",", "").split()
 
     if len(parts) == 0:
         value = 0

@@ -52,7 +52,7 @@ class Player:
         except:
             pass
 
-        for product in sorted(self.__products, key=lambda x: x.get_price(), reverse=True):
+        for product in self.__products[::-1]:
 
             if product.get_price() and product.get_price() < self.__cookies:
                 

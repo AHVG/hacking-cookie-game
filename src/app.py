@@ -30,6 +30,7 @@ class App:
 
     def run(self):
         self.__driver.get(self.__cookie_game_url)
+        # self.__driver.fullscreen_window()
 
         time.sleep(5)
 
